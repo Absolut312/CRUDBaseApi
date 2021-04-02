@@ -1,10 +1,9 @@
 using System;
-using System.Threading.Tasks;
 using BaseApi.PAL.Core;
 using BaseApi.PAL.Core.FindById;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using Range = System.Range;
 
 namespace BaseApi.Test.Core.FindById
 {
@@ -16,7 +15,7 @@ namespace BaseApi.Test.Core.FindById
         public void Setup()
         {
             var mockBaseFindByIdService = new Mock<IBaseFindByIdService<BaseModel>>();
-            mockBaseFindByIdService.Setup(x => x.FindById(It.IsInRange(1, 10,Moq.Range.Inclusive)))
+            mockBaseFindByIdService.Setup(x => x.FindById(It.IsInRange(1, 10, Moq.Range.Inclusive)))
                 .Returns((int id) => new BaseModel
                 {
                     Id = id,
@@ -26,7 +25,7 @@ namespace BaseApi.Test.Core.FindById
                     CreationDate = DateTime.Now,
                     ModificationTime = DateTime.Now
                 });
-            mockBaseFindByIdService.Setup(x => x.FindById(It.IsNotIn<int>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)))
+            mockBaseFindByIdService.Setup(x => x.FindById(It.IsNotIn(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)))
                 .Returns(() => null);
             _baseFindByIdController = new BaseFindByIdController<BaseModel>(mockBaseFindByIdService.Object);
         }
@@ -61,57 +60,60 @@ namespace BaseApi.Test.Core.FindById
 
         [Test]
         [TestCaseSource(nameof(_notAvailableFindByIdTestCases))]
-        public async Task ShouldReturnNullWhenIdLessOneOrGreaterTen(int id)
+        public void ShouldReturnNullWhenIdLessOneOrGreaterTen(int id)
         {
-            Assert.Null(await _baseFindByIdController.FindById(id));
+            Assert.IsNull(((OkObjectResult) _baseFindByIdController.FindById(id)).Value);
         }
 
         [Test]
         [TestCaseSource(nameof(_availableFindByIdTestCases))]
-        public async Task ShouldReturnBaseModelWithSameIdWhenIdIsGreaterZeroOrLessEleven(int id)
+        public void ShouldReturnBaseModelWithSameIdWhenIdIsGreaterZeroOrLessEleven(int id)
         {
             var expectedId = id;
-            var actualId = (await _baseFindByIdController.FindById(id)).Id;
+            var actualId = ((_baseFindByIdController.FindById(id) as OkObjectResult)?.Value as BaseModel)?.Id;
             Assert.AreEqual(expectedId, actualId);
         }
 
         [Test]
         [TestCaseSource(nameof(_availableFindByIdTestCases))]
-        public async Task ShouldReturnBaseModelNameWithIdAtEndWhenIdIsGreaterZeroOrLessEleven(int id)
+        public void ShouldReturnBaseModelNameWithIdAtEndWhenIdIsGreaterZeroOrLessEleven(int id)
         {
             var expectedName = "Name " + id;
-            var actualName = (await _baseFindByIdController.FindById(id)).Name;
+            var actualName = ((_baseFindByIdController.FindById(id) as OkObjectResult)?.Value as BaseModel)?.Name;
             Assert.AreEqual(expectedName, actualName);
         }
 
         [Test]
         [TestCaseSource(nameof(_availableFindByIdTestCases))]
-        public async Task ShouldReturnBaseModelDescriptionWithIdAtEndWhenIdIsGreaterZeroOrLessEleven(int id)
+        public void ShouldReturnBaseModelDescriptionWithIdAtEndWhenIdIsGreaterZeroOrLessEleven(int id)
         {
             var expectedDescription = "Beschreibung " + id;
-            var actualDescription = (await _baseFindByIdController.FindById(id)).Description;
+            var actualDescription = ((_baseFindByIdController.FindById(id) as OkObjectResult)?.Value as BaseModel)
+                ?.Description;
             Assert.AreEqual(expectedDescription, actualDescription);
         }
 
         [Test]
         [TestCaseSource(nameof(_availableFindByIdTestCases))]
-        public async Task ShouldReturnBaseModelIsNotDeletedWhenIdIsGreaterZeroOrLessEleven(int id)
+        public void ShouldReturnBaseModelIsNotDeletedWhenIdIsGreaterZeroOrLessEleven(int id)
         {
-            Assert.False((await _baseFindByIdController.FindById(id)).IsDeleted);
+            Assert.False(((_baseFindByIdController.FindById(id) as OkObjectResult)?.Value as BaseModel)?.IsDeleted);
         }
 
         [Test]
         [TestCaseSource(nameof(_availableFindByIdTestCases))]
-        public async Task ShouldReturnBaseModelCreationDateIsNotNullWhenIdIsGreaterZeroOrLessEleven(int id)
+        public void ShouldReturnBaseModelCreationDateIsNotNullWhenIdIsGreaterZeroOrLessEleven(int id)
         {
-            Assert.NotNull((await _baseFindByIdController.FindById(id)).CreationDate);
+            Assert.NotNull(((_baseFindByIdController.FindById(id) as OkObjectResult)?.Value as BaseModel)
+                ?.CreationDate);
         }
 
         [Test]
         [TestCaseSource(nameof(_availableFindByIdTestCases))]
-        public async Task ShouldReturnBaseModelModificationTimeIsNotNullWhenIdIsGreaterZeroOrLessEleven(int id)
+        public void ShouldReturnBaseModelModificationTimeIsNotNullWhenIdIsGreaterZeroOrLessEleven(int id)
         {
-            Assert.NotNull((await _baseFindByIdController.FindById(id)).ModificationTime);
+            Assert.NotNull(((_baseFindByIdController.FindById(id) as OkObjectResult)?.Value as BaseModel)
+                ?.ModificationTime);
         }
     }
 }

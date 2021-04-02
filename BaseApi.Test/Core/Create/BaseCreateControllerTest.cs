@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using BaseApi.PAL.Core;
 using BaseApi.PAL.Core.Create;
 using Microsoft.AspNetCore.Mvc;
@@ -28,23 +27,23 @@ namespace BaseApi.Test.Core.Create
         }
 
         [Test]
-        public async Task ShouldReturnInstanceOfBadRequestObjectResultWhenBaseModelNameIsNull()
+        public void ShouldReturnInstanceOfBadRequestObjectResultWhenBaseModelNameIsNull()
         {
             var baseModel = new BaseModel
             {
                 Name = null
             };
-            Assert.IsInstanceOf<BadRequestObjectResult>(await _baseCreateController.Create(baseModel));
+            Assert.IsInstanceOf<BadRequestObjectResult>(_baseCreateController.Create(baseModel));
         }
         
         [Test]
-        public async Task ShouldReturnInstanceOfOkObjectResultWhenBaseModelNameIsNotNull()
+        public void ShouldReturnInstanceOfOkObjectResultWhenBaseModelNameIsNotNull()
         {
             var baseModel = new BaseModel
             {
                 Name = ""
             };
-            Assert.IsInstanceOf<OkObjectResult>(await _baseCreateController.Create(baseModel));
+            Assert.IsInstanceOf<OkObjectResult>(_baseCreateController.Create(baseModel));
         }
     }
 }

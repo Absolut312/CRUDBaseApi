@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseApi.PAL.Core.Delete
 {
-    public class BaseDeleteController<TEntity, TValidator>
+    public class BaseDeleteController<TEntity, TValidator> : ControllerBase
         where TValidator : AbstractValidator<TEntity>, new()
     {
         private readonly IBaseDeleteService<TEntity> _baseDeleteService;
@@ -18,17 +16,15 @@ namespace BaseApi.PAL.Core.Delete
         }
 
         [HttpDelete]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Delete([FromBody] TEntity entity)
+        public IActionResult Delete([FromBody] TEntity entity)
         {
             var validationResult = _validator.Validate(entity);
             if (!validationResult.IsValid)
             {
-                return new BadRequestObjectResult(validationResult);
+                return BadRequest(validationResult);
             }
 
-            return new OkObjectResult(_baseDeleteService.Delete(entity));
+            return Ok(_baseDeleteService.Delete(entity));
         }
     }
 }

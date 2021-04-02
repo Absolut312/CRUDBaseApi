@@ -27,23 +27,23 @@ namespace BaseApi.Test.Core.Delete
         }
 
         [Test]
-        public async Task ShouldReturnInstanceOfBadRequestObjectResultWhenBaseModelNameIsNull()
+        public void ShouldReturnInstanceOfBadRequestObjectResultWhenBaseModelNameIsNull()
         {
             var baseModel = new BaseModel
             {
                 Name = null
             };
-            Assert.IsInstanceOf<BadRequestObjectResult>(await _baseDeleteController.Delete(baseModel));
+            Assert.IsInstanceOf<BadRequestObjectResult>(_baseDeleteController.Delete(baseModel));
         }
 
         [Test]
-        public async Task ShouldReturnInstanceOfOkObjectResultWhenBaseModelNameIsNotNull()
+        public void ShouldReturnInstanceOfOkObjectResultWhenBaseModelNameIsNotNull()
         {
             var baseModel = new BaseModel
             {
                 Name = ""
             };
-            Assert.IsInstanceOf<OkObjectResult>(await _baseDeleteController.Delete(baseModel));
+            Assert.IsInstanceOf<OkObjectResult>(_baseDeleteController.Delete(baseModel));
         }
     }
 }

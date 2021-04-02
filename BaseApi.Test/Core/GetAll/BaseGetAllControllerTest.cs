@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BaseApi.PAL.Core;
 using BaseApi.PAL.Core.GetAll;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 
@@ -28,21 +29,21 @@ namespace BaseApi.Test.Core.GetAll
         }
 
         [Test]
-        public async Task ShouldReturnNotEmpty()
+        public void ShouldReturnNotEmpty()
         {
-            Assert.IsNotEmpty(await _baseGetAllController.GetAll());
+            Assert.IsNotEmpty((_baseGetAllController.GetAll() as OkObjectResult)?.Value as List<BaseModel>);
         }
 
         [Test]
-        public async Task ShouldReturnInstanceOfListBaseModel()
+        public void ShouldReturnInstanceOfListBaseModel()
         {
-            Assert.IsInstanceOf<List<BaseModel>>(await _baseGetAllController.GetAll());
+            Assert.IsInstanceOf<List<BaseModel>>((_baseGetAllController.GetAll() as OkObjectResult)?.Value);
         }
 
         [Test]
-        public async Task ShoulReturnNotNull()
+        public void ShoulReturnNotNull()
         {
-            Assert.NotNull(await _baseGetAllController.GetAll());
+            Assert.NotNull(((_baseGetAllController.GetAll() as OkObjectResult)?.Value as List<BaseModel>));
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseApi.PAL.Core.FindById
@@ -15,10 +14,11 @@ namespace BaseApi.PAL.Core.FindById
         }
 
         [HttpGet]
-        public async Task<TEntity> FindById([FromRoute] int id)
+        public IActionResult FindById([FromRoute] int id)
         {
             var entity = _baseFindByIdService.FindById(id);
-            return entity;
+            
+            return Ok(entity);
         }
     }
 }

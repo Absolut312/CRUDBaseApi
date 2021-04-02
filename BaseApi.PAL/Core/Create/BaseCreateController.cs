@@ -1,13 +1,11 @@
-using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseApi.PAL.Core.Create
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BaseCreateController<TEntity, TValidator>
+    public class BaseCreateController<TEntity, TValidator>: ControllerBase
         where TValidator : AbstractValidator<TEntity>, new()
     {
         private readonly IBaseCreateService<TEntity> _baseCreateService;
@@ -20,17 +18,15 @@ namespace BaseApi.PAL.Core.Create
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] TEntity entity)
+        public IActionResult Create([FromBody] TEntity entity)
         {
             var validationResult = _validator.Validate(entity);
             if (!validationResult.IsValid)
             {
-                return new BadRequestObjectResult(validationResult);
+                return BadRequest(validationResult);
             }
 
-            return new OkObjectResult(_baseCreateService.Create(entity));
+            return Ok(_baseCreateService.Create(entity));
         }
     }
 }

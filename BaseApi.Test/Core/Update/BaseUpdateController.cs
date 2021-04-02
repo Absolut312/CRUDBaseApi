@@ -22,23 +22,23 @@ namespace BaseApi.Test.Core.Update
         }
 
         [Test]
-        public async Task ShouldReturnInstanceOfBadRequestObjectResultWhenBaseModelNameIsNull()
+        public void ShouldReturnInstanceOfBadRequestObjectResultWhenBaseModelNameIsNull()
         {
             var baseModel = new BaseModel
             {
                 Name = null
             };
-            Assert.IsInstanceOf<BadRequestObjectResult>(await _baseUpdateController.Update(baseModel));
+            Assert.IsInstanceOf<BadRequestObjectResult>(_baseUpdateController.Update(baseModel));
         }
 
         [Test]
-        public async Task ShouldReturnInstanceOfOkObjectResultWhenBaseModelNameIsNotNull()
+        public void ShouldReturnInstanceOfOkObjectResultWhenBaseModelNameIsNotNull()
         {
             var baseModel = new BaseModel
             {
                 Name = ""
             };
-            Assert.IsInstanceOf<OkObjectResult>(await _baseUpdateController.Update(baseModel));
+            Assert.IsInstanceOf<OkObjectResult>(_baseUpdateController.Update(baseModel));
         }
     }
 }

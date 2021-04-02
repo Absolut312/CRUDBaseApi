@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseApi.PAL.Core.GetAll
@@ -16,9 +14,9 @@ namespace BaseApi.PAL.Core.GetAll
         }
 
         [HttpGet]
-        public async Task<List<TEntity>> GetAll()
+        public IActionResult GetAll()
         {
-            return _baseGetAllService.GetAll();
+            return Ok(_baseGetAllService.GetAll());
         }
     }
 }

@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseApi.PAL.Core.Update
 {
-    public class BaseUpdateController<TEntity, TValidator>
+    public class BaseUpdateController<TEntity, TValidator>: ControllerBase
         where TValidator : AbstractValidator<TEntity>, new()
     {
         private readonly IBaseUpdateService<TEntity> _baseUpdateService;
@@ -18,17 +16,15 @@ namespace BaseApi.PAL.Core.Update
         }
 
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update([FromBody] TEntity entity)
+        public IActionResult Update([FromBody] TEntity entity)
         {
             var validationResult = _validator.Validate(entity);
             if (!validationResult.IsValid)
             {
-                return new BadRequestObjectResult(validationResult);
+                return BadRequest(validationResult);
             }
 
-            return new OkObjectResult(_baseUpdateService.Update(entity));
+            return Ok(_baseUpdateService.Update(entity));
         }
     }
 }
